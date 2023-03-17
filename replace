@@ -25,33 +25,21 @@ newpattern = argv[3]
 def traverse(path):
     #search if has old pattern 
     pathname = Path(path)
-    print(pathname)
 
-    #rename file/dir
+    #rename file/dir and get new path
     replacename = re.sub(oldpattern, newpattern, str(path))
-    print(replacename)
     os.rename(pathname, replacename)
-
     replacepath = Path(replacename)
+    
     if os.path.isdir(path):
         for entry in pathname.iterdir():
             traverse(entry)
     else:
-        print("opening " + str(pathname))
         #replace contents of file
         with open(replacepath, 'r') as inf:
             tempfile = inf.read()
-        print(tempfile)
         with open(replacepath, 'w') as outf:
             outf.write(tempfile.replace(oldpattern, newpattern))
-
-        
-        #with open(pathname, 'r') as inf:
-        #    filecontents = inf.read()
-        #print(filecontents)
-        #replace = re.sub(oldpattern, newpattern, filecontents)
-        #with open(pathname, 'w') as outf:
-        #    outf.write(replace)
 
 traverse(replacedir)
 
